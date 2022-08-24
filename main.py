@@ -1,0 +1,221 @@
+from crypt import methods
+from distutils.log import error
+from flask import Flask, render_template, request, url_for, redirect, flash, send_from_directory, abort
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_sqlalchemy import SQLAlchemy
+from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField, PasswordField
+from wtforms.validators import DataRequired, URL
+import email
+from flask_bootstrap import Bootstrap
+from distutils.log import error
+from flask_ckeditor import CKEditor, CKEditorField
+from functools import wraps
+
+
+
+
+app = Flask(__name__)
+Bootstrap(app)
+ckeditor = CKEditor(app)
+
+# configuration of login manager
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+# pyhton decorator to allow only the admin to access the page
+def admin_only(f):
+    @wraps(f)
+    def decorated_function(*args, **kwargs):
+        #If id is not 1 then return abort with 403 error
+        if current_user.id != 1:
+            return abort(403)
+        #Otherwise continue with the route function
+        return f(*args, **kwargs)        
+    return decorated_function
+
+
+app.config['SECRET_KEY'] = 'qwertyuiopasdfghjklzxcvbnm'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+db = SQLAlchemy(app)
+
+
+# ******** DATABASE ********
+
+##CREATE TABLE IN DB
+class User(UserMixin, db.Model):
+    __tablename__ = "users"
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(100), unique=True)
+    password = db.Column(db.String(100))
+    name = db.Column(db.String(1000))
+    location = db.Column(db.String(1000))
+
+#Line below only required once, when creating DB. 
+db.create_all()
+
+class Items(db.Model):
+    __tablename__ = "items"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(1000))
+    description = db.Column(db.String(1000))
+    price = db.Column(db.String(1000))
+    image_url = db.Column(db.String(1000))
+    category= db.Column(db.String(100))
+    
+db.create_all()
+
+
+
+# ********** FORMS  *********
+
+# register form
+class RegisterForm(FlaskForm):
+    name = StringField("Name", validators=[DataRequired()])
+    email = StringField("Email", validators=[DataRequired(), email.utils.parseaddr])
+    location= StringField("Location", validators=[DataRequired()])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("sign me up")
+
+
+# login form
+class LoginForm(FlaskForm):
+    email = StringField("Email", validators=[DataRequired(), email.utils.parseaddr])
+    password = PasswordField("Password", validators=[DataRequired()])
+    submit = SubmitField("Log in")
+
+# add item to the data base
+class AddItemForm(FlaskForm):
+    name = StringField("Item name", validators=[DataRequired()])
+    price = StringField("Item price", validators=[DataRequired()])
+    img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
+    category= StringField("Category", validators=[DataRequired()])
+    description = CKEditorField("Item description", validators=[DataRequired()])
+    
+    submit = SubmitField("Submit Post")
+
+@app.route('/')
+def home():
+    return render_template("index.html")
+
+
+@app.route('/register', methods=["GET", "POST"])
+def register():
+    form = RegisterForm()
+    if request.method == "POST":
+    
+        # check if email already exists in db
+        email = request.form.get("email")
+        if User.query.filter_by(email=email).first():
+            flash("Email already exists!")
+            return redirect(url_for("register", error=error))
+        else:
+            # hashing a password
+            hash_and_salted_password = generate_password_hash(
+                request.form.get('password'),
+                method='pbkdf2:sha256',
+                salt_length=8
+            )
+
+            new_user = User(
+                email=request.form.get('email'),
+                name=request.form.get('name'),
+                password=hash_and_salted_password,
+                location=request.form.get('location')
+            )
+
+            db.session.add(new_user)
+            db.session.commit()
+            login_user(new_user)
+
+            return redirect(url_for("home"))
+
+    return render_template("register.html", form=form)
+
+
+@app.route('/login',  methods=['GET', 'POST'])
+def login():
+    form = LoginForm()
+    if request.method == "POST":
+        email = request.form.get("email")
+        password = request.form.get("password")
+        user = User.query.filter_by(email=email).first()
+        if user:
+            if check_password_hash(user.password, password):
+                login_user(user)
+                return redirect(url_for("home", name=user.name))
+            else:
+                flash("Please check your password")
+                return redirect(url_for("login", error=error))
+        else:
+            flash("Please check your email!")
+            return redirect(url_for("login", error=error))
+        
+    return render_template("login.html", form=form)
+
+
+@app.route('/add', methods=["GET", "POST"])
+@admin_only
+def add():
+    form = AddItemForm()
+    if request.method == "POST":
+        new_item = Items(
+            name=request.form.get("name"),
+            price=request.form.get("price"),
+            image_url=request.form.get("img_url"),
+            category=request.form.get("category"),
+            description=request.form.get("description")
+        )
+        db.session.add(new_item)
+        db.session.commit()
+        return redirect(url_for("home"))
+    return render_template("add.html", form=form)
+
+
+@app.route("/delete/<int:post_id>")
+@admin_only
+def delete_item(post_id):
+    item_to_delete = Items.query.get(post_id)
+    db.session.delete(item_to_delete)
+    db.session.commit()
+    return redirect(url_for('home'))
+
+
+# @app.route("/edit-item/<int:item_id>")
+# @admin_only
+# def edit(item_id):
+#     item = Items.query.get(item_id)
+#     edit_form = AddItemForm(
+#         name=item.name,
+#         price=item.price,
+#         img_url=item.img_url,
+#         category=item.category,
+#         desription=item.description,
+#     )
+#     if edit_form.validate_on_submit():
+#         item.title = edit_form.title.data
+#         item.price = edit_form.price.data
+#         item.img_url = edit_form.img_url.data
+#         item.category = edit_form.category.data
+#         item.description = edit_form.description.data
+#         db.session.commit()
+#         return redirect(url_for("home", item_id=item.id))
+
+#     return render_template("edit.html", form=edit_form)
+
+
+
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+if __name__ == "__main__":
+    app.run(debug=True)
