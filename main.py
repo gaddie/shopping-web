@@ -5,13 +5,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
 from flask_login import UserMixin, login_user, LoginManager, login_required, current_user, logout_user
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, PasswordField
+from wtforms import StringField, SubmitField, PasswordField, IntegerField
 from wtforms.validators import DataRequired, URL
 import email
 from flask_bootstrap import Bootstrap
 from distutils.log import error
 from flask_ckeditor import CKEditor, CKEditorField
 from functools import wraps
+
 
 
 
@@ -64,11 +65,11 @@ db.create_all()
 class Items(db.Model):
     __tablename__ = "items"
     id = db.Column(db.Integer, primary_key=True)
-    name = db.Column(db.String(1000))
-    description = db.Column(db.String(1000))
-    price = db.Column(db.String(1000))
-    image_url = db.Column(db.String(1000))
-    category= db.Column(db.String(100))
+    name = db.Column(db.String(1000), nullable=False)
+    description = db.Column(db.String(1000), nullable=False)
+    price = db.Column(db.String(1000), nullable=False)
+    image_url = db.Column(db.String(1000), nullable=False)
+    category= db.Column(db.String(100), nullable=False)
     
 db.create_all()
 
@@ -95,15 +96,22 @@ class LoginForm(FlaskForm):
 class AddItemForm(FlaskForm):
     name = StringField("Item name", validators=[DataRequired()])
     price = StringField("Item price", validators=[DataRequired()])
-    img_url = StringField("Blog Image URL", validators=[DataRequired(), URL()])
+    img_url = StringField("Item Image URL", validators=[DataRequired(), URL()])
     category= StringField("Category", validators=[DataRequired()])
     description = CKEditorField("Item description", validators=[DataRequired()])
     
+    
     submit = SubmitField("Submit Post")
 
+
+
+
+# ********** ROUTES *********
 @app.route('/')
 def home():
-    return render_template("index.html")
+    items = Items.query.all()
+        
+    return render_template("index.html", items=items)
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -165,6 +173,7 @@ def login():
 @admin_only
 def add():
     form = AddItemForm()
+    
     if request.method == "POST":
         new_item = Items(
             name=request.form.get("name"),
@@ -219,3 +228,11 @@ def logout():
 
 if __name__ == "__main__":
     app.run(debug=True)
+
+
+
+
+# TO LIST
+# ADD RATING BY THE CUSTOMERS
+# DESCRIPTION OF THE ITEM
+# ADD TO CART

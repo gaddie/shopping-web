@@ -94,6 +94,13 @@ body {
 
 }
 
+.cart {
+  padding-top: 10px;
+}
+.description {
+  text-align: center;
+}
+
 hr {
   margin: 1rem 0;
   color: inherit;
