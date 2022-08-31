@@ -101,7 +101,7 @@ class AddItemForm(FlaskForm):
     description = CKEditorField("Item description", validators=[DataRequired()])
     
     
-    submit = SubmitField("Submit Post")
+    submit = SubmitField("Submit Item")
 
 
 
@@ -110,7 +110,6 @@ class AddItemForm(FlaskForm):
 @app.route('/')
 def home():
     items = Items.query.all()
-        
     return render_template("index.html", items=items)
 
 
@@ -188,37 +187,41 @@ def add():
     return render_template("add.html", form=form)
 
 
-@app.route("/delete/<int:post_id>")
+@app.route("/edit<int:item_id>", methods=["GET", "POST"])
+def edit(item_id):
+    item = Items.query.get(item_id)
+    edit_form = AddItemForm(
+        name=item.name,
+        price=item.price,
+        img_url=item.image_url,
+        category=item.category,
+        description=item.description
+    )
+    if edit_form.validate_on_submit():
+        item.name = edit_form.name.data
+        item.price = edit_form.price.data
+        item.image_url = edit_form.img_url.data
+        item.category = edit_form.category.data
+        item.description = edit_form.description.data    
+        db.session.commit()
+        return redirect(url_for("home", item_id=item_id))
+    return render_template("edit.html", form=edit_form, is_edit=True, current_user=current_user)
+
+
+
+
+@app.route('/description')
+def description():
+    return render_template("description.html")
+
+
+@app.route("/delete/<int:item_id>")
 @admin_only
-def delete_item(post_id):
-    item_to_delete = Items.query.get(post_id)
+def delete(item_id):
+    item_to_delete = Items.query.get(item_id)
     db.session.delete(item_to_delete)
     db.session.commit()
     return redirect(url_for('home'))
-
-
-# @app.route("/edit-item/<int:item_id>")
-# @admin_only
-# def edit(item_id):
-#     item = Items.query.get(item_id)
-#     edit_form = AddItemForm(
-#         name=item.name,
-#         price=item.price,
-#         img_url=item.img_url,
-#         category=item.category,
-#         desription=item.description,
-#     )
-#     if edit_form.validate_on_submit():
-#         item.title = edit_form.title.data
-#         item.price = edit_form.price.data
-#         item.img_url = edit_form.img_url.data
-#         item.category = edit_form.category.data
-#         item.description = edit_form.description.data
-#         db.session.commit()
-#         return redirect(url_for("home", item_id=item.id))
-
-#     return render_template("edit.html", form=edit_form)
-
 
 
 @app.route('/logout')
