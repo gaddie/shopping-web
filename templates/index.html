@@ -26,15 +26,15 @@
                     {% for item in items %}
                     <div class="col">
                         <div class="card h-100">
-                          <img src="{{ item.img_url }}" class="img-thumbnail w a"alt="...">
+                          <img src="{{ item.image_url }}" class="img-thumbnail w a"alt="...">
                           
                           <div class="card-body">
-                            <h5 class="card-title spring-text">{{ item.name }}</h5>
-                            <h5 class="card-title spring-text">Ksh {{ item.price }}</h5>
+                            <h6 class="card-title spring-text">{{ item.name }}</h6>
+                            <h6 class="card-title spring-text">Ksh {{ item.price }}</h6>
 
                             {% if current_user.id != 1: %}
                                 <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="">Add to cart</a></div>
-                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('description') }}">Description</a></div>
+                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('description', item_id=item.id) }}">Description</a></div>
                             {% else: %}
                                 <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('edit', item_id=item.id) }}">Edit</a></div>
                                 <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('delete', item_id=item.id) }}">Delete</a></div>
@@ -45,6 +45,38 @@
                     {% endfor %}
 
                 </div>
+            </div>
+        </section>
+
+        <section class="page-section text-white mb-0" id="about">
+            <div class="container">
+                <!-- About Section Heading-->
+                <h2 class="page-section-heading text-center text-uppercase text-white">About Us</h2>
+                <!-- Icon Divider-->
+              
+                <!-- About Section Content-->
+              
+                <p><em> We give you the best shopping experience with afordable prices and discounts</em></p>
+                <hr>
+                <h3 class="about-text">CONTACT US AT</h3>
+                <ul>
+                    <li><i class="fa-solid fa-envelope"></i> dailydeals@gmail.com</li>
+                    <li><i class="fa-solid fa-phone"></i> 0712345678</li>
+                    <li><i class="fa-brands fa-instagram"></i> Daiy_deals</li>
+                </ul>
+
+                <hr>
+                <h3 class="about-text">Hobbies</h3>
+                <ol>
+                    <li>Swimming</li>
+                    <li>Playing basketball</li>
+                    <li>Playing football</a> </li>
+                    <li>I 🤍  coding</a> </li>
+
+                </ol>
+                <hr>
+                <!-- About Section Button-->
+
             </div>
         </section>
         {% include "footer.html" %}

@@ -76,6 +76,10 @@
   }
 }
 
+/* .description {
+  margin: 3px;
+} */
+
 body {
   margin: 0;
   font-family: var(--bs-body-font-family);
@@ -94,6 +98,9 @@ body {
 
 }
 
+#about {
+  background-color: #100720;
+}
 
 .cart {
   padding-top: 10px;

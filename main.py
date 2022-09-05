@@ -75,6 +75,30 @@ db.create_all()
 
 
 
+# ******** cart ********
+# class Cart():
+#     def __init__(self):
+#         self.items = []
+#         self.total = 0
+#         self.quantity = 0
+
+#     def add_item(self, item):
+#         self.items.append(item)
+#         self.total += float(item.price)
+#         self.quantity += 1
+
+#     def remove_item(self, item):
+#         self.items.remove(item)
+#         self.total -= float(item.price)
+#         self.quantity -= 1
+
+#     def clear_cart(self):
+#         self.items = []
+#         self.total = 0
+#         self.quantity = 0
+
+
+
 # ********** FORMS  *********
 
 # register form
@@ -172,7 +196,6 @@ def login():
 @admin_only
 def add():
     form = AddItemForm()
-    
     if request.method == "POST":
         new_item = Items(
             name=request.form.get("name"),
@@ -208,11 +231,44 @@ def edit(item_id):
     return render_template("edit.html", form=edit_form, is_edit=True, current_user=current_user)
 
 
+@app.route('/description/<int:item_id>')
+def description(item_id):
+    requested_item = Items.query.get(item_id)
+    return render_template("description.html", item=requested_item, current_user=current_user)
 
 
-@app.route('/description')
-def description():
-    return render_template("description.html")
+# ********** cart *********
+
+# @app.route("/add_to_cart/<int:item_id>")
+# def add_to_cart(item_id):
+#     item = Items.query.get(item_id)
+#     if item:
+#         existing_item = Cart.query.filter_by(item_id=item_id, ordered=False).first()
+#         if existing_item:
+#             existing_item.quantity += 1
+#             db.session.commit()
+#             flash("This item quantity was updated.")
+#             return redirect(url_for("home"))
+#         else:
+#             new_item = Cart(item_id=item_id, quantity=1)
+#             db.session.add(new_item)
+#             db.session.commit()
+#             flash("This item was added to your cart.")
+#             return redirect(url_for("home"))
+#     else:
+#         flash("This item does not exist.")
+#         return redirect(url_for("home"))
+
+
+
+@app.route('/cart/<int:item_id>')
+def cart(item_id):
+    selected_item = Items.query.get(item_id)
+    if selected_item not in current_user.cart:
+        current_user.cart.append(selected_item)
+        db.session.commit()
+
+    return render_template("cart.html", current_user=current_user)
 
 
 @app.route("/delete/<int:item_id>")
