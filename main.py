@@ -12,6 +12,8 @@ from flask_bootstrap import Bootstrap
 from distutils.log import error
 from flask_ckeditor import CKEditor, CKEditorField
 from functools import wraps
+from sqlalchemy.orm import relationship
+from flask_migrate import Migrate
 
 
 
@@ -20,6 +22,8 @@ from functools import wraps
 app = Flask(__name__)
 Bootstrap(app)
 ckeditor = CKEditor(app)
+
+
 
 # configuration of login manager
 login_manager = LoginManager()
@@ -46,6 +50,7 @@ app.config['SECRET_KEY'] = 'qwertyuiopasdfghjklzxcvbnm'
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
+migrate = Migrate(app, db)
 
 
 # ******** DATABASE ********
@@ -59,7 +64,12 @@ class User(UserMixin, db.Model):
     name = db.Column(db.String(1000))
     location = db.Column(db.String(1000))
 
-#Line below only required once, when creating DB. 
+    # bidirectional relationship with CartItems class
+    cart_items = relationship("CartItems", back_populates="customer_name")
+
+
+
+
 db.create_all()
 
 class Items(db.Model):
@@ -70,33 +80,28 @@ class Items(db.Model):
     price = db.Column(db.String(1000), nullable=False)
     image_url = db.Column(db.String(1000), nullable=False)
     category= db.Column(db.String(100), nullable=False)
+
+
     
 db.create_all()
 
 
+class CartItems(db.Model):
+    __tablename__ = "cart_items"
+    id = db.Column(db.Integer, primary_key=True)
+    item_name = db.Column(db.String(500), nullable=False)
+    item_price = db.Column(db.String(100), nullable=False)
 
-# ******** cart ********
-# class Cart():
-#     def __init__(self):
-#         self.items = []
-#         self.total = 0
-#         self.quantity = 0
+    # one to many relationship with User
+    customer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-#     def add_item(self, item):
-#         self.items.append(item)
-#         self.total += float(item.price)
-#         self.quantity += 1
+    # create reference to the User object, the "comments" refers to the comments property in the User class.
+    customer_name = relationship("User", back_populates="cart_items")
 
-#     def remove_item(self, item):
-#         self.items.remove(item)
-#         self.total -= float(item.price)
-#         self.quantity -= 1
 
-#     def clear_cart(self):
-#         self.items = []
-#         self.total = 0
-#         self.quantity = 0
 
+
+db.create_all()
 
 
 # ********** FORMS  *********
@@ -116,6 +121,7 @@ class LoginForm(FlaskForm):
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Log in")
 
+
 # add item to the data base
 class AddItemForm(FlaskForm):
     name = StringField("Item name", validators=[DataRequired()])
@@ -134,7 +140,10 @@ class AddItemForm(FlaskForm):
 @app.route('/')
 def home():
     items = Items.query.all()
-    return render_template("index.html", items=items)
+    ordered_items = CartItems.query.all()
+    
+    total_items = len(ordered_items)
+    return render_template("index.html", items=items, total_items=total_items, current_user=current_user)
 
 
 @app.route('/register', methods=["GET", "POST"])
@@ -210,6 +219,7 @@ def add():
     return render_template("add.html", form=form)
 
 
+# ******** EDIT ITEM ********
 @app.route("/edit<int:item_id>", methods=["GET", "POST"])
 def edit(item_id):
     item = Items.query.get(item_id)
@@ -237,49 +247,55 @@ def description(item_id):
     return render_template("description.html", item=requested_item, current_user=current_user)
 
 
-# ********** cart *********
 
-# @app.route("/add_to_cart/<int:item_id>")
-# def add_to_cart(item_id):
-#     item = Items.query.get(item_id)
-#     if item:
-#         existing_item = Cart.query.filter_by(item_id=item_id, ordered=False).first()
-#         if existing_item:
-#             existing_item.quantity += 1
-#             db.session.commit()
-#             flash("This item quantity was updated.")
-#             return redirect(url_for("home"))
-#         else:
-#             new_item = Cart(item_id=item_id, quantity=1)
-#             db.session.add(new_item)
-#             db.session.commit()
-#             flash("This item was added to your cart.")
-#             return redirect(url_for("home"))
-#     else:
-#         flash("This item does not exist.")
-#         return redirect(url_for("home"))
+# ********** CART *********
 
 
-
-@app.route('/cart/<int:item_id>')
-def cart(item_id):
+@app.route('/to_cart/<int:item_id>')
+def add_to_cart(item_id):
     selected_item = Items.query.get(item_id)
-    if selected_item not in current_user.cart:
-        current_user.cart.append(selected_item)
-        db.session.commit()
 
-    return render_template("cart.html", current_user=current_user)
+    ordered_item = CartItems(    
+        item_name=selected_item.name,
+        item_price=selected_item.price,
+        customer_name=current_user,
+    )
+    db.session.add(ordered_item)
+    db.session.commit()
+
+    return redirect(url_for("home"))
 
 
+@app.route('/cart')
+def cart():
+    ordered_items = CartItems.query.all()
+    if not current_user.is_authenticated:
+        flash("You need to login or register in order to purchase any item.")
+        return redirect(url_for("login"))
+
+    return render_template("cart.html", items=ordered_items, current_user=current_user)
+
+
+@app.route("/delete_item/<int:item_id>")
+def delete_item(item_id):
+    item_to_delete = CartItems.query.get(item_id)
+    db.session.delete(item_to_delete)
+    db.session.commit()
+    return redirect(url_for('cart'))
+
+
+# ******* DELETE ITEM ********
 @app.route("/delete/<int:item_id>")
 @admin_only
 def delete(item_id):
     item_to_delete = Items.query.get(item_id)
     db.session.delete(item_to_delete)
     db.session.commit()
+    
     return redirect(url_for('home'))
 
 
+# ********** LOGOUT *********
 @app.route('/logout')
 def logout():
     logout_user()
@@ -293,5 +309,3 @@ if __name__ == "__main__":
 
 # TO LIST
 # ADD RATING BY THE CUSTOMERS
-# DESCRIPTION OF THE ITEM
-# ADD TO CART

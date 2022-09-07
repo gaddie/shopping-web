@@ -61,8 +61,7 @@
                     </ul>
                     <form class="d-flex">
                         <div class="text-center cart">
-                            <a class="btn btn-outline-dark mt-auto" href="{{ url_for('cart') }}"> <i class="bi-cart-fill me-1"></i> Cart <span class="badge bg-dark text-white ms-1 rounded-pill">0</span></a>  
-                            
+                            <a class="btn btn-outline-dark mt-auto" href="{{ url_for('cart') }}"> <i class="bi-cart-fill me-1"></i> Cart <span class="badge bg-dark text-white ms-1 rounded-pill"> {{ total_items }} </span></a> 
                         </div>
 
                     </form>

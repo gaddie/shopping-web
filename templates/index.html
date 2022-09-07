@@ -33,7 +33,7 @@
                             <h6 class="card-title spring-text">Ksh {{ item.price }}</h6>
 
                             {% if current_user.id != 1: %}
-                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="">Add to cart</a></div>
+                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('add_to_cart', item_id=item.id) }}">Add to cart</a></div>
                                 <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('description', item_id=item.id) }}">Description</a></div>
                             {% else: %}
                                 <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('edit', item_id=item.id) }}">Edit</a></div>
@@ -66,12 +66,10 @@
                 </ul>
 
                 <hr>
-                <h3 class="about-text">Hobbies</h3>
+                <h3 class="about-text">Lorem Ipsum</h3>
                 <ol>
-                    <li>Swimming</li>
-                    <li>Playing basketball</li>
-                    <li>Playing football</a> </li>
-                    <li>I 🤍  coding</a> </li>
+                    <li>Lorem ipsum</li>
+
 
                 </ol>
                 <hr>
