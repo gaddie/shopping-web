@@ -63,11 +63,13 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
     location = db.Column(db.String(1000))
+    phone = db.Column(db.String(1000))
 
     # bidirectional relationship with CartItems class
     cart_items = relationship("CartItems", back_populates="customer_name")
 
-
+    items = relationship("Items", back_populates="customer")
+    
 
 
 db.create_all()
@@ -77,11 +79,13 @@ class Items(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(1000), nullable=False)
     description = db.Column(db.String(1000), nullable=False)
-    price = db.Column(db.String(1000), nullable=False)
+    price = db.Column(db.Integer, nullable=False)
     image_url = db.Column(db.String(1000), nullable=False)
     category= db.Column(db.String(100), nullable=False)
 
+    customer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
+    customer = relationship("User", back_populates="items")
     
 db.create_all()
 
@@ -90,16 +94,14 @@ class CartItems(db.Model):
     __tablename__ = "cart_items"
     id = db.Column(db.Integer, primary_key=True)
     item_name = db.Column(db.String(500), nullable=False)
-    item_price = db.Column(db.String(100), nullable=False)
+    item_price = db.Column(db.Integer, nullable=False)
 
     # one to many relationship with User
     customer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     # create reference to the User object, the "comments" refers to the comments property in the User class.
     customer_name = relationship("User", back_populates="cart_items")
-
-
-
+   
 
 db.create_all()
 
@@ -111,8 +113,9 @@ class RegisterForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), email.utils.parseaddr])
     location= StringField("Location", validators=[DataRequired()])
+    phone = StringField("Phone", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
-    submit = SubmitField("sign me up")
+    submit = SubmitField("Register")
 
 
 # login form
@@ -125,14 +128,13 @@ class LoginForm(FlaskForm):
 # add item to the data base
 class AddItemForm(FlaskForm):
     name = StringField("Item name", validators=[DataRequired()])
-    price = StringField("Item price", validators=[DataRequired()])
+    price = IntegerField("Item price", validators=[DataRequired()])
     img_url = StringField("Item Image URL", validators=[DataRequired(), URL()])
     category= StringField("Category", validators=[DataRequired()])
     description = CKEditorField("Item description", validators=[DataRequired()])
     
     
-    submit = SubmitField("Submit Item")
-
+    submit = SubmitField("Add Item")
 
 
 
@@ -140,10 +142,16 @@ class AddItemForm(FlaskForm):
 @app.route('/')
 def home():
     items = Items.query.all()
-    ordered_items = CartItems.query.all()
-    
-    total_items = len(ordered_items)
-    return render_template("index.html", items=items, total_items=total_items, current_user=current_user)
+    cart_items = CartItems.query.filter_by(customer_id=current_user.get_id()).all()
+    # add all the prices of the items in the cart
+    total = 0   
+    for item in cart_items:
+        total += item.item_price
+
+
+    total_items = len(cart_items)
+
+    return render_template("index.html", total=total, items=items, ordered_items=cart_items, total_items=total_items, current_user=current_user)
 
 
 @app.route('/register', methods=["GET", "POST"])

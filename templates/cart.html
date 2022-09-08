@@ -12,22 +12,60 @@
     <div class="row">
     
       <div class="col-lg-8 col-md-10 mx-auto content login">
+        {% if current_user.id == 1: %}
+        <h1>Ordered items</h1>
+        {% else: %}
         <h1>Cart</h1>
+        {% endif %}
 
-        {% for item in items.cart_items : %}
+        {% for item in items: %}
+
+        <!-- admin section -->
+        {% if current_user.id == 1: %}
+         
+            <ol class="list-group">
+              <li class="list-group-item d-flex justify-content-between align-items-start">
+                <div class="ms-2 me-auto">
+                  <div class="fw-bold">{{ item.customer_name.name }}</div>
+                  from: {{item.customer_name.location}} - gmail: {{item.customer_name.email}} -  phone: {{item.customer_name.phone}}
+
+                </div>
+                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="">Checkout</a></div>
+              </li>
+            
+            </ol>
+         
+        <!-- customer section -->
+        {% elif item.customer_id == current_user.id: %}
           
           <ol class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-start">
               <div class="ms-2 me-auto">
                 <div class="fw-bold">{{ item.item_name }}</div>
                 Ksh: {{item.item_price}}
+                
               </div>
               <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('delete_item', item_id=item.id) }}">Remove</a></div>
             </li>
            
           </ol>
+        {% endif %}
         {% endfor %}
-        
+
+        {% if current_user.id != 1: %}
+          <ol class="list-group">
+            <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div class="ms-2 me-auto">
+                <div class="fw-bold">Total </div>
+                <!-- gett the total  -->
+           
+                
+              </div>
+              <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="">Order Now</a></div>
+            </li>
+          
+          </ol>
+          {% endif %}
       </div>
     </div>
   </div>
