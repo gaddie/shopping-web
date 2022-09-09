@@ -80,7 +80,9 @@ class Items(db.Model):
     name = db.Column(db.String(1000), nullable=False)
     description = db.Column(db.String(1000), nullable=False)
     price = db.Column(db.Integer, nullable=False)
-    image_url = db.Column(db.String(1000), nullable=False)
+    image_url_1 = db.Column(db.String(1000), nullable=False)
+    image_url_2 = db.Column(db.String(1000), nullable=False)
+    image_url_3 = db.Column(db.String(1000), nullable=False)
     category= db.Column(db.String(100), nullable=False)
 
     customer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
@@ -129,7 +131,9 @@ class LoginForm(FlaskForm):
 class AddItemForm(FlaskForm):
     name = StringField("Item name", validators=[DataRequired()])
     price = IntegerField("Item price", validators=[DataRequired()])
-    img_url = StringField("Item Image URL", validators=[DataRequired(), URL()])
+    img_url_1 = StringField("Item Image URL 1", validators=[DataRequired(), URL()])
+    img_url_2 = StringField("Item Image URL 2", validators=[DataRequired(), URL()])
+    img_url_3 = StringField("Item Image URL 3", validators=[DataRequired(), URL()])
     category= StringField("Category", validators=[DataRequired()])
     description = CKEditorField("Item description", validators=[DataRequired()])
     
@@ -217,7 +221,9 @@ def add():
         new_item = Items(
             name=request.form.get("name"),
             price=request.form.get("price"),
-            image_url=request.form.get("img_url"),
+            image_url_1=request.form.get("img_url_1"),
+            image_url_2=request.form.get("img_url_2"),
+            image_url_3=request.form.get("img_url_3"),
             category=request.form.get("category"),
             description=request.form.get("description")
         )
@@ -310,7 +316,7 @@ def logout():
     return redirect(url_for('home'))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=8000)
 
 
 
