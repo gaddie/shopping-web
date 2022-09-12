@@ -213,7 +213,7 @@ input:nth-of-type(5):checked ~ main#carousel {
   position: absolute;
   height: 300px;
   width: 600px;
-  top: 60px;
+  top: 100px;
   left: calc(50% - 300px);
   display: flex;
 }
@@ -225,7 +225,6 @@ input:nth-of-type(5):checked ~ main#carousel {
   background-color: #17141d;
   border-radius: 10px;
   box-shadow: -1rem 0 3rem #000;
-/*   margin-left: -50px; */
   transition: 0.4s ease-out;
   position: relative;
   left: 0px;
@@ -233,7 +232,7 @@ input:nth-of-type(5):checked ~ main#carousel {
 }
 
 .card:not(:first-child) {
-    margin-left: -50px;
+    /* margin-left: -50px; */
 }
 
 .card:hover {

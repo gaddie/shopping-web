@@ -213,6 +213,7 @@ def login():
     return render_template("login.html", form=form)
 
 
+# adding items to the database
 @app.route('/add', methods=["GET", "POST"])
 @admin_only
 def add():
@@ -235,6 +236,7 @@ def add():
 
 # ******** EDIT ITEM ********
 @app.route("/edit<int:item_id>", methods=["GET", "POST"])
+@admin_only
 def edit(item_id):
     item = Items.query.get(item_id)
     edit_form = AddItemForm(
@@ -268,12 +270,15 @@ def description(item_id):
 @app.route('/to_cart/<int:item_id>')
 def add_to_cart(item_id):
     selected_item = Items.query.get(item_id)
-
-    ordered_item = CartItems(    
-        item_name=selected_item.name,
-        item_price=selected_item.price,
-        customer_name=current_user,
-    )
+    if not current_user.is_authenticated:
+        flash("You need to login or register in order to purchase any item.")
+        return redirect(url_for("login"))
+    else:
+        ordered_item = CartItems(    
+            item_name=selected_item.name,
+            item_price=selected_item.price,
+            customer_name=current_user,
+        )
     db.session.add(ordered_item)
     db.session.commit()
 
@@ -282,14 +287,37 @@ def add_to_cart(item_id):
 
 @app.route('/cart')
 def cart():
+    cart_items = CartItems.query.filter_by(customer_id=current_user.get_id()).all()
+    total_items = len(cart_items)
     ordered_items = CartItems.query.all()
+
+    total = 0   
+    for item in cart_items:
+        total += item.item_price
+
     if not current_user.is_authenticated:
         flash("You need to login or register in order to purchase any item.")
         return redirect(url_for("login"))
 
-    return render_template("cart.html", items=ordered_items, current_user=current_user)
+    return render_template("cart.html", items=ordered_items, total=total, current_user=current_user, total_items=total_items)
 
 
+@app.route('/orders')
+def orders():
+    ordered_items = CartItems.query.all()
+
+    for item in ordered_items:
+        if item.customer_id == current_user.get_id():
+            orders = len(ordered_items)
+        else:
+            flash("You have no orders yet.")
+            return redirect(url_for("home"))
+
+    pass
+
+
+
+# ******* CUSTOMER ORDERS DELETE ROUTE ********
 @app.route("/delete_item/<int:item_id>")
 def delete_item(item_id):
     item_to_delete = CartItems.query.get(item_id)
@@ -298,7 +326,7 @@ def delete_item(item_id):
     return redirect(url_for('cart'))
 
 
-# ******* DELETE ITEM ********
+# ******* DELETE ITEM FOR HOME ********
 @app.route("/delete/<int:item_id>")
 @admin_only
 def delete(item_id):
