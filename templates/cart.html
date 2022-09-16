@@ -18,18 +18,26 @@
         <h1>Cart</h1>
         {% endif %}
 
-        {% for item in items: %}
+  
+
+      
 
         <!-- admin section -->
         {% if current_user.id == 1: %}
+
+        {% for item in items %}
         
-         
             <ol class="list-group">
               <li class="list-group-item d-flex justify-content-between align-items-start">
                 <div class="ms-2 me-auto">
 
                   <div class="fw-bold">Customer Name: {{ item.customer_name.name }}</div>
-
+                  From: {{item.customer_name.location}}
+                  
+                  gmail: {{item.customer_name.email}}
+                  
+                  Phone: +254-{{item.customer_name.phone}}
+                   
                   
                   <!-- From: {{item.customer_name.location}} - gmail: {{item.customer_name.email}} -  Phone: {{item.customer_name.phone}}
                   <br>
@@ -56,7 +64,7 @@
                         <br>
                         Phone: {{item.customer_name.phone}}
                         <br>    
-                        Price: Ksh ~ {{item.item_price}}
+                        Price: Ksh {{item.item_price}}
                       </div>
                       <div class="modal-footer">
                         
@@ -70,9 +78,15 @@
               </li>
             
             </ol>
-         
+           
+        {% endfor %}
+        {% endif %}
+
+
         <!-- customer section -->
-        {% elif item.customer_id == current_user.id: %}
+        {% for item in items: %}
+        {% if item.customer_id == current_user.id: %}
+       
           
           <ol class="list-group">
             <li class="list-group-item d-flex justify-content-between align-items-start">
@@ -85,6 +99,7 @@
             </li>
            
           </ol>
+     
         {% endif %}
         {% endfor %}
 

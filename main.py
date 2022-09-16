@@ -63,7 +63,7 @@ class User(UserMixin, db.Model):
     password = db.Column(db.String(100))
     name = db.Column(db.String(1000))
     location = db.Column(db.String(1000))
-    phone = db.Column(db.String(1000))
+    phone = db.Column(db.Integer, unique=True)
 
     # bidirectional relationship with CartItems class
     cart_items = relationship("CartItems", back_populates="customer_name")
@@ -86,7 +86,6 @@ class Items(db.Model):
     category= db.Column(db.String(100), nullable=False)
 
     customer_id = db.Column(db.Integer, db.ForeignKey('users.id'))
-
     customer = relationship("User", back_populates="items")
     
 db.create_all()
@@ -115,7 +114,7 @@ class RegisterForm(FlaskForm):
     name = StringField("Name", validators=[DataRequired()])
     email = StringField("Email", validators=[DataRequired(), email.utils.parseaddr])
     location= StringField("Location", validators=[DataRequired()])
-    phone = StringField("Phone", validators=[DataRequired()])
+    phone = IntegerField("Phone", validators=[DataRequired()])
     password = PasswordField("Password", validators=[DataRequired()])
     submit = SubmitField("Register")
 
@@ -152,7 +151,6 @@ def home():
     for item in cart_items:
         total += item.item_price
 
-
     total_items = len(cart_items)
 
     return render_template("index.html", total=total, items=items, ordered_items=cart_items, total_items=total_items, current_user=current_user)
@@ -165,9 +163,14 @@ def register():
     
         # check if email already exists in db
         email = request.form.get("email")
+        phone = request.form.get("phone")
         if User.query.filter_by(email=email).first():
             flash("Email already exists!")
             return redirect(url_for("register", error=error))
+        elif User.query.filter_by(phone=phone).first():
+            flash("Phone number already exists!")
+            return redirect(url_for("register", error=error))
+  
         else:
             # hashing a password
             hash_and_salted_password = generate_password_hash(
@@ -180,8 +183,10 @@ def register():
                 email=request.form.get('email'),
                 name=request.form.get('name'),
                 password=hash_and_salted_password,
+                phone=request.form.get('phone'),
                 location=request.form.get('location')
             )
+
 
             db.session.add(new_user)
             db.session.commit()
@@ -289,8 +294,7 @@ def add_to_cart(item_id):
 def cart():
     cart_items = CartItems.query.filter_by(customer_id=current_user.get_id()).all()
     total_items = len(cart_items)
-    ordered_items = CartItems.query.all()
-
+    ordered_items = CartItems.query.all()          
     total = 0   
     for item in cart_items:
         total += item.item_price
@@ -299,22 +303,7 @@ def cart():
         flash("You need to login or register in order to purchase any item.")
         return redirect(url_for("login"))
 
-    return render_template("cart.html", items=ordered_items, total=total, current_user=current_user, total_items=total_items)
-
-
-@app.route('/orders')
-def orders():
-    ordered_items = CartItems.query.all()
-
-    for item in ordered_items:
-        if item.customer_id == current_user.get_id():
-            orders = len(ordered_items)
-        else:
-            flash("You have no orders yet.")
-            return redirect(url_for("home"))
-
-    pass
-
+    return render_template("cart.html", items=ordered_items, total=total, current_user=current_user, total_items=total_items, cart_items=cart_items)
 
 
 # ******* CUSTOMER ORDERS DELETE ROUTE ********
