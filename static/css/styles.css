@@ -105,6 +105,225 @@ body {
 }
 
 /* ******************** */
+
+/* html body {
+  background-color: black;
+  margin: 0 0 0 0;
+} */
+.infocardContainer * {
+  font-family: 'Fira Sans Condensed', sans-serif;
+  font-weight: 300;
+}
+h2 {
+  font-weight: 600; font-style: italic; font-family: "Fira Sans Condensed", sans-serif;
+}
+/*  */
+a {
+  text-decoration: none;
+}
+a:visited {
+  color: #555566;
+}
+a:hover {
+  text-decoration: underline;
+}
+.infocardContainer {
+  display: flex;
+  height: 200px;
+  width: 200px;
+  border-radius: 100px;
+  background: rgb(0,159,255);
+  background: linear-gradient(121deg, rgba(255,255,255,0) 13%, rgba(0,159,255,1) 100%);
+  transition: all 500ms ease-in;
+  transition-delay: 1s;
+  margin: auto;
+  margin-top: 100px;
+  --margin-top: 100px;
+}
+.infocardContainer:hover {
+  width: 500px;
+  border-radius: 100px 10px 100px 100px;
+  transition: all 1s ease-out;
+}
+
+.infocardContainer div {
+  /* color: white; */
+  flex-shrink: 1;
+  width: 100%;
+  --background-color: green;
+}
+.infocardContainer div * {
+  display: flex;
+  --flex: inherit;
+  overflow: hidden;
+  text-overflow: hidden;
+  --background-color: yellow;
+  color: white;
+  white-space: nowrap;
+  width: 0;
+  height: auto;
+  transition: all 450ms ease-in;
+  transition-delay: 1s;
+}
+.infocardContainer:hover div *{
+  --background-color: purple;
+  display: flex;
+  visibility: visible;
+  transition: all 1s ease-out;
+  transition-delay: 500ms;
+  width: 100%;
+  height: auto;
+}
+
+.infocardContainer #main, .infocardContainer #main img{
+  --background-color: red;
+  height: 200px;
+  width: 200px;
+  padding-right: 10px;
+  border-radius: 100%;
+  flex-shrink: 0;
+  object-fit: cover;
+}
+.infocardContainer #main img{
+  height: 180px;
+  width: 180px;
+  transition: none;
+  display: float;
+  position: relative;
+  border: 10px solid white;
+  margin: 0 0 0 0; padding: 0 0 0 0;
+}
+.infocardContainer #textbois {
+  position: relative;
+}
+.infocardContainer #textbois #hotlinks {
+  max-width: 60%;
+  max-height: 30px;
+  
+  --background-color: white;
+  position:absolute;
+  bottom: 5px;
+  display: flex;
+  justify-content: space-between;
+  border-radius: 13px;
+}
+.infocardContainer #textbois #hotlinks * {
+  background-color: white;
+  max-width: 30px;
+  --margin: 0 1px 0 1px;
+  border-radius: 25px;
+}
+/*TODO: animate copy main transition style for info*/
+.infocardContainer #textbois #hotlinks *:hover {
+  
+  
+}
+
+/* ************************ */
+.card-border {
+  border: 1px solid #c7c7c7;
+  border-radius: .25rem;
+  padding: 15px 18px 10px 18px;
+  margin-bottom: 30px;
+  cursor: pointer;
+}
+
+.card-bg {
+  background-color: rgba(89, 211, 137, .08);
+  border: 1px solid #59d389;
+}
+
+.upsell-pricing {
+  float: right;
+  font-size: 18px;
+  font-weight: 600;
+}
+
+.upsell-text {
+  font-size: 15px;
+  margin-top: 10px;
+  color: #333333;
+}
+
+div.ho-border:hover {
+  border: 1px solid #59d389;
+}
+
+
+/* ************************************ */
+
+CSS JSResult Skip Results Iframe
+EDIT ON
+/* @import url('https://fonts.googleapis.com/css?family=Roboto:700'); */
+
+/* body {
+  margin:0px;
+  font-family:'Roboto';
+  text-align:center;
+} */
+
+#container {
+  color:#999;
+  text-transform: uppercase;
+  font-size:36px;
+  font-weight:bold;
+  padding-top:200px;  
+  position:fixed;
+  width:100%;
+  bottom:45%;
+  display:block;
+}
+
+#flip {
+  height:50px;
+  overflow:hidden;
+}
+
+#flip > div > div {
+  color:#fff;
+  padding:4px 12px;
+  height:45px;
+  margin-bottom:50px;
+  display:inline-block;
+}
+
+#flip div:first-child {
+  animation: show 5s linear infinite;
+}
+
+#flip div div {
+  background:#42c58a;
+}
+#flip div:first-child div {
+  background:#4ec7f3;
+}
+#flip div:last-child div {
+  background:#1e23ac;
+}
+
+
+
+@keyframes show {
+  0% {margin-top:-270px;}
+  5% {margin-top:-180px;}
+  33% {margin-top:-180px;}
+  38% {margin-top:-90px;}
+  66% {margin-top:-90px;}
+  71% {margin-top:0px;}
+  99.99% {margin-top:0px;}
+  100% {margin-top:-270px;}
+}
+
+
+.deals {
+  text-align: center;
+  font-family: cursive;
+  
+}
+.dealers {
+  margin-top: 20px;
+}
+/* *************************** */
 .smart {
   height: 500px;
   margin: 0;

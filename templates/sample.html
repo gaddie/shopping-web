@@ -1,276 +1,45 @@
-<!doctype html>
-<html lang="en">
-  <head>
-    <!-- Required meta tags -->
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% import "bootstrap/wtf.html" as wtf %}
 
-    <!-- Bootstrap CSS -->
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-
-    <title>Hello, world!</title>
-  </head>
-  <body>
-
-    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
-      Launch demo modal
-    </button>
+{% block content %}
+{% include "header.html" %}
+  <!-- Page Header -->
+  
+  <!-- <header class="masthead" style="background-image: url('{{ url_for('static', filename='img/edit-bg.jpg')}}')"> -->
     
-      <!-- Modal -->
-    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
-            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-          </div>
-          <div class="modal-body">
-            ...<h1>Hello, world!</h1>
-            {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <ul class=flashes>
-                {% for message in messages %}
-                <p>{{ message }}</p>
-                {% endfor %}
-                </ul>
-            {% endif %}
-            {% endwith %}
-            
-            {{ wtf.quick_form(form, novalidate=True, button_map={"submit": "primary"}) }}
-          </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-            <button type="button" class="btn btn-primary">Save changes</button>
-          </div>
-        </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+    <!-- Fuel Replacement -->
+    <div class="card-border ho-border">
+      <h4 class="float-left">Fuel replacement</h4>
+      <div class="upsell-pricing">£49/trip</div>
+      <div class="clearfix"></div>
+      <div class="upsell-text">Save time and return the vehicle at any fuel level. The price include upto a full tank of petrol/gas.</div>
+      <div class="mt-3 float-right">
+        <button type="button" class="btn btn-add-item">Add this extra</button>
       </div>
+      <div class="clearfix"></div>
+    </div>
+    <!-- Portable WiFi Hotspot -->
+    <div class="card-border ho-border">
+      <h4 class="float-left">Portable WiFi hotspot</h4>
+      <div class="upsell-pricing">£10/day</div>
+      <div class="clearfix"></div>
+      <div class="upsell-text">Get the luxury of portable WiFi hotspot on the go. The price include unlimited data usage for the day.</div>
+      <div class="mt-3 float-right">
+        <button type="button" class="btn btn-add-item">Add this extra</button>
+      </div>
+      <div class="clearfix"></div>
+    </div>
+    <!-- Post-trip Cleaning -->
+    <div class="card-border ho-border">
+      <h4 class="float-left">Post-trip cleaning</h4>
+      <div class="upsell-pricing">£30/trip</div>
+      <div class="clearfix"></div>
+      <div class="upsell-text">Return the vehicle without bothering about post-trip cleaning. This extra does not cover damages to the vehicle seat, stains, spills, and smoke burns.</div>
+      <div class="mt-3 float-right">
+        <button type="button" class="btn btn-add-item">Add this extra</button>
+      </div>
+      <div class="clearfix"></div>
     </div>
 
-    <!-- Optional JavaScript; choose one of the two! -->
-
-    <!-- Option 1: Bootstrap Bundle with Popper -->
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-
-    <!-- Option 2: Separate Popper and Bootstrap JS -->
-    <!--
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-    -->
-  </body>
-</html>
-
-
-
-
-
-
-
-
-
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Product image-->
-      <img class="card-img-top image-fit" src="https://intereasyshop.com/500-large_default/samsung-galaxy-a20.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Fancy Product</h5>
-              <!-- Product price-->
-              $40.00 - $80.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-      </div>
-  </div>
-</div>
-
-
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Sale badge-->
-      <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-      <!-- Product image-->
-      <img class="card-img-top image-fit" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Special Item</h5>
-              <!-- Product reviews-->
-              <div class="d-flex justify-content-center small text-warning mb-2">
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-              </div>
-              <!-- Product price-->
-              <span class="text-muted text-decoration-line-through">$20.00</span>
-              $18.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-      </div>
-  </div>
-</div>
-
-
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Sale badge-->
-      <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-      <!-- Product image-->
-      <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Sale Item</h5>
-              <!-- Product price-->
-              <span class="text-muted text-decoration-line-through">$50.00</span>
-              $25.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-      </div>
-  </div>
-</div>
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Product image-->
-      <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Popular Item</h5>
-              <!-- Product reviews-->
-              <div class="d-flex justify-content-center small text-warning mb-2">
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-              </div>
-              <!-- Product price-->
-              $40.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-      </div>
-  </div>
-</div>
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Sale badge-->
-      <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-      <!-- Product image-->
-      <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Sale Item</h5>
-              <!-- Product price-->
-              <span class="text-muted text-decoration-line-through">$50.00</span>
-              $25.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-      </div>
-  </div>
-</div>
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Product image-->
-      <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Fancy Product</h5>
-              <!-- Product price-->
-              $120.00 - $280.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">View options</a></div>
-      </div>
-  </div>
-</div>
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Sale badge-->
-      <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">Sale</div>
-      <!-- Product image-->
-      <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Special Item</h5>
-              <!-- Product reviews-->
-              <div class="d-flex justify-content-center small text-warning mb-2">
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-              </div>
-              <!-- Product price-->
-              <span class="text-muted text-decoration-line-through">$20.00</span>
-              $18.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-      </div>
-  </div>
-</div>
-<div class="col mb-5">
-  <div class="card h-100">
-      <!-- Product image-->
-      <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..." />
-      <!-- Product details-->
-      <div class="card-body p-4">
-          <div class="text-center">
-              <!-- Product name-->
-              <h5 class="fw-bolder">Popular Item</h5>
-              <!-- Product reviews-->
-              <div class="d-flex justify-content-center small text-warning mb-2">
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-                  <div class="bi-star-fill"></div>
-              </div>
-              <!-- Product price-->
-              $40.00
-          </div>
-      </div>
-      <!-- Product actions-->
-      <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-          <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a></div>
-      </div>
-  </div>
-</div>
-
-<div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('edit')}}">Edit</a></div>
-<div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('delete') }}">Delete</a></div>
-
-
-   <!-- <h3>Total: {{ total }}</h3>
-        <a href="{{ url_for('checkout') }}" class="btn btn-primary">Checkout</a> -->
+{% include "footer.html" %}
+{% endblock %}

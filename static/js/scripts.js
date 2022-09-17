@@ -12,5 +12,40 @@ myModal.addEventListener('shown.bs.modal', function () {
   myInput.focus()
 })
 
+$(document).ready(function() {
+  var visEle = $(".card-border:visible");
+  var hidEle = $(".card-border:not(:visible)");
+
+  if (hidEle.length > 0) {
+    $('.card-border:last').after('<button class="showMore">Show more</button>')
+  }
+
+  $(document).on("click", ".showMore", function() {
+    hidEle.first().show();
+    hidEle = $(".card-border:not(:visible)");
+    if (hidEle.length == 0) {
+      $(".showMore").hide();
+    }
+  });
+});
+
+
+$(document).ready(function() {
+  var visEle = $(".card-border:visible");
+  var hidEle = $(".card-border:not(:visible)");
+
+  if (hidEle.length > 0) {
+    $('.card-border:last').after('<button class="showMore">Show more</button>')
+  }
+
+  $(document).on("click", ".showMore", function() {
+    hidEle.first().show();
+    hidEle = $(".card-border:not(:visible)");
+    if (hidEle.length == 0) {
+      $(".showMore").hide();
+    }
+  });
+});
+
 
 
