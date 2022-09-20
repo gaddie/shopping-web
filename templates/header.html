@@ -1,117 +1,110 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-        <meta name="description" content="" />
-        <meta name="author" content="" />
-        <title>Daily deals</title>
-        <!-- Favicon-->
-        <link rel="icon" type="image/x-icon" href="/static/assets/favicon.ico" />
-        <!-- Bootstrap icons-->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
-        <!-- Core theme CSS (includes Bootstrap)-->
-        <link href="/static/css/styles.css" rel="stylesheet" />
-        <link type="text/css" rel="stylesheet" href="http://fakedomain.com/smilemachine/html.css" />
-        <!-- bootstrap css -->
-        <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-        <meta charset="utf-8">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
+<html lang="zxx">
 
-        <!-- Font Awesome icons (free version)-->
-        <script src="https://use.fontawesome.com/releases/v6.1.0/js/all.js" crossorigin="anonymous"></script>
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="Ogani Template">
+    <meta name="keywords" content="Ogani, unica, creative, html">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Daily Deals</title>
 
-        <!-- google fonts -->
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Lobster+Two:ital@1&family=Rubik+Maze&family=Shadows+Into+Light&display=swap" rel="stylesheet">
+    <!-- Google Font -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@200;300;400;600;900&display=swap" rel="stylesheet">
 
-        <!-- ****** -->
-        <link href="https://fonts.googleapis.com/css?family=Fira+Sans+Condensed:300,400,600i&display=swap" rel="stylesheet">
+    <!-- Css Styles -->
+    <link rel="stylesheet" href="static/css/bootstrap.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/font-awesome.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/elegant-icons.css" type="text/css">
+    <link rel="stylesheet" href="static/css/nice-select.css" type="text/css">
+    <link rel="stylesheet" href="static/css/jquery-ui.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/owl.carousel.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/slicknav.min.css" type="text/css">
+    <link rel="stylesheet" href="static/css/style.css" type="text/css">
+</head>
 
-        
+<body>
+    <!-- Page Preloder -->
+    <div id="preloder">
+        <div class="loader"></div>
+    </div>
 
-    </head>
-    <body>
-        <!-- Navigation-->
-        <nav class="navbar navbar-expand-lg navbar-light bg-light">
-            <div class="container px-4 px-lg-5">
-                
-                <img src="https://previews.123rf.com/images/emcrea14/emcrea142102/emcrea14210205149/164599082-dd-letter-logo-design-with-shopping-bag-icon-the-concept-of-a-modern-online-shopping-logo.jpg" class="logo" alt="">
-                <a class="navbar-brand" class="shop-name" href="#!">Daily deals</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation"><span class="navbar-toggler-icon"></span></button>
-                <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                    <ul class="navbar-nav me-auto mb-2 mb-lg-0 ms-lg-4">
+    <!-- Humberger Begin -->
+    <div class="humberger__menu__overlay"></div>
+    <div class="humberger__menu__wrapper">
+        <div class="humberger__menu__logo">
+            <a href="{{url_for('cart')}}"><img src="https://previews.123rf.com/images/emcrea14/emcrea142102/emcrea14210205149/164599082-dd-letter-logo-design-with-shopping-bag-icon-the-concept-of-a-modern-online-shopping-logo.jpg" class="logo" alt=""></a>
+        </div>
 
-                        <li class="nav-item"><a class="nav-link active" aria-current="page" href="{{ url_for('home') }}">Home</a></li>
-                        
-                        <li class="nav-item"><a class="nav-link" href="#!">About</a></li>
-                        {% if not current_user.is_authenticated: %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('login') }}">Log In</a></li>
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('register') }}">Register</a></li>
-                        {% else: %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('logout') }}">Log Out</a></li>
-                        {% endif %}
-
-                        {% if current_user.id == 1: %}
-                        <li class="nav-item"><a class="nav-link" href="{{ url_for('add') }}">Add Item</a></li>
-                        {% endif %}
-
-
-
-                        <li class="nav-item dropdown">
-                            <ul class="dropdown-menu" aria-labelledby="navbarDropdown">
-                                <li><a class="dropdown-item" href="#!">All Products</a></li>
-                                <li><hr class="dropdown-divider" /></li>
-                                <li><a class="dropdown-item" href="{{ url_for('login') }}">Login</a></li>
-                                <li><a class="dropdown-item" href="{{ url_for('register') }}">Register</a></li>
-                               
-                            </ul>
-                        </li>
-                    </ul>
-                    <form class="d-flex">
-                        <div class="text-center cart">
-                            {% if current_user.is_authenticated: %}
-                                <a class="btn btn-outline-dark mt-auto" href="{{ url_for('cart') }}"> <i class="bi-cart-fill me-1"></i> Cart <span class="badge bg-dark text-white ms-1 rounded-pill"> {{ total_items }} </span></a> 
-                            {% elif current_user.id == 1: %}
-                            <a class="btn btn-outline-dark mt-auto" href="{{ url_for('cart') }}"> <i class="bi-cart-fill me-1"></i> Ordered Items<span class="badge bg-dark text-white ms-1 rounded-pill"> {{ total_items }} </span></a> 
-                            {% else: %}
-                            <a class="btn btn-outline-dark mt-auto" href="{{ url_for('login') }}"> <i class="bi-cart-fill me-1"></i> Cart <span class="badge bg-dark text-white ms-1 rounded-pill"> 0 </span></a> 
-                            
-                            {% endif %}
-                        </div>
-
-                    </form>
-                </div>
-            </div>
+        <nav class="humberger__menu__nav mobile-menu">
+            <ul>
+                <li class="active"><a href="{{url_for('home')}}">Home</a></li>
+                {% if not current_user.is_authenticated: %}
+                <li><a href="{{url_for('register')}}">Register</a></li>
+                <li><a href="{{ url_for('login') }}">Login</a></li>
+                {% else: %}
+                <li><a href="{{url_for('logout')}}">Log out</a></li>
+                {% endif %}
+                {% if current_user.id == 1: %}
+                <li><a href="{{url_for('add')}}">Add item</a></li>
+                <li><a href="{{url_for('add_offer')}}">Offers</a></li>
+                {%endif%}
+                <li><a href="{{url_for('contact')}}">Contact</a></li>
+                <li><a href="{{ url_for('cart') }}">Cart<span class="badge bg-dark text-white ms-1 rounded-pill"> {{ total_items }}</span></a></li>
+            </ul>
         </nav>
+        <div id="mobile-menu-wrap"></div>
 
 
-        <header class="bg-dark py-5">
-            <div class="container px-4 px-lg-5 my-5">
-                <div class="text-center text-white">
-                    <!-- <img src="https://previews.123rf.com/images/emcrea14/emcrea142102/emcrea14210205149/164599082-dd-letter-logo-design-with-shopping-bag-icon-the-concept-of-a-modern-online-shopping-logo.jpg" class="main-logo" alt=""> -->
-                    
-                    <div class="infocardContainer">
-                        <div id="main">
-                          <img src="https://previews.123rf.com/images/emcrea14/emcrea142102/emcrea14210205149/164599082-dd-letter-logo-design-with-shopping-bag-icon-the-concept-of-a-modern-online-shopping-logo.jpg"></img>
-                        </div>
-                        <div id="textbois">
-                          <h2>Daily Deals</h2>
-                          <h4>shop in style</h4>
-                          <a href="mailto:dailydeals9396@gmail.com">dailydeals9396@gmail.com</a>
-                  
-                        </div>
-                      </div>
+    </div>
+   <!-- Humberger End -->
 
-                     <!-- <h1 class="shop-name fast-flicker">Daily Deals</h1> -->
-                
-                    <p class="shop-subname">Shop In Style</p> 
+    <!-- Header Section Begin -->
+    <header class="header">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-3">
+                    <div class="header__logo">
+                        <a href="./index.html"><img src="https://previews.123rf.com/images/emcrea14/emcrea142102/emcrea14210205149/164599082-dd-letter-logo-design-with-shopping-bag-icon-the-concept-of-a-modern-online-shopping-logo.jpg" class="logo" alt=""></a>
+                    </div>
                 </div>
+                <div class="col-lg-6">
+                    <nav class="header__menu">
+                        <ul>
+                            <li class="active"><a href="{{url_for('home')}}">Home</a></li>
+                            {% if not current_user.is_authenticated: %}
+                            <li><a href="{{url_for('register')}}">Register</a></li>
+                            <li><a href="{{ url_for('login') }}">Login</a></li>
+                            {% else: %}
+                            <li><a href="{{url_for('logout')}}">Log out</a></li>
+                            {% endif %}
+                            {% if current_user.id == 1: %}
+                            <li><a href="{{url_for('add')}}">Add item</a></li>
+                            <li><a href="{{url_for('add_offer')}}">Offers</a></li>
+                            {%endif%}
+                            <li><a href="{{url_for('contact')}}">Contact</a></li>
+                            <li><a href="{{ url_for('cart') }}">Cart<span class="badge bg-dark text-white ms-1 rounded-pill"> {{ total_items }}</span></a></li>
+
+                        </ul>
+                    </nav>
+                </div>
+
             </div>
-        </header>
-  
+            <div class="humberger__open">
+                <i class="fa fa-bars"></i>
+            </div>
+        </div>
+    </header>
+    <!-- Header Section End -->
 
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <body>
 
+    <script src="static/js/jquery-3.3.1.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/jquery.nice-select.min.js"></script>
+    <script src="static/js/jquery-ui.min.js"></script>
+    <script src="static/js/jquery.slicknav.js"></script>
+    <script src="static/js/mixitup.min.js"></script>
+    <script src="static/js/owl.carousel.min.js"></script>
+    <script src="static/js/main.js"></script>
     </body>

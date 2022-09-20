@@ -1,67 +1,174 @@
 {% include "header.html" %}
 {% import "bootstrap/wtf.html" as wtf %}
 
+<!--     Categories Section Begin-->
+    <section class="categories">
+        <div class="container">
+            <div class="row">
+                <div class="categories__slider owl-carousel">
 
-        <!-- Header-->
-
-
- -->
-        <!-- top container-->
-        
-        <div class="container dealers">
-            <div>
-                
-                <h5 class="deals">get the best deals in our</h5>
-                
-                <div id=container class="deals">
-                    <div id=flip>
-                    <div><div>Electronics</div></div>
-                    <div><div>Furniture</div></div>
-                    <div><div>Fast foods</div></div>
-                
-                    </div>
-                </div>   
-            </div>
-        </div>
-        <!-- Section-->
-
-        
-        
-        <section class="py-5">
-            
-            <div class="container px-4 px-lg-5 mt-5">
-                <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-
-                    {% for item in items %}
-                    <div class="col">
-                        <div class="card h-100">
-                          <img src="{{ item.image_url_1}}" class="img-thumbnail w a"alt="...">
-                          
-                          <div class="card-body">
-                            <h6 class="card-title spring-text">{{ item.name }}</h6>
-                            <h6 class="card-title spring-text">Ksh {{ item.price }}</h6>
-
-                            {% if current_user.id != 1: %}
-                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('add_to_cart', item_id=item.id) }}">Add to cart</a></div>
-                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('description', item_id=item.id) }}">Description</a></div>
-                            {% else: %}
-                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('edit', item_id=item.id) }}">Edit</a></div>
-                                <div class="text-center cart"><a class="btn btn-outline-dark mt-auto" href="{{ url_for('delete', item_id=item.id) }}">Delete</a></div>
-                            {% endif %}
-                          </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="https://images.pexels.com/photos/12673168/pexels-photo-12673168.jpeg?auto=compress&cs=tinysrgb&w=1600">
+                            <h5><a href="#">Utensils</a></h5>
                         </div>
-                      </div>
-                    {% endfor %}
-        
+                    </div>
 
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="https://images.pexels.com/photos/9555116/pexels-photo-9555116.jpeg?auto=compress&cs=tinysrgb&w=1600">
+                            <h5><a href="#">Phones</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="https://images.pexels.com/photos/592815/pexels-photo-592815.jpeg?auto=compress&cs=tinysrgb&w=1600">
+                            <h5><a href="#">Watches</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="https://images.pexels.com/photos/5217774/pexels-photo-5217774.jpeg?auto=compress&cs=tinysrgb&w=1600">
+                            <h5><a href="#">Detergents</a></h5>
+                        </div>
+                    </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="https://images.pexels.com/photos/373638/pexels-photo-373638.jpeg?auto=compress&cs=tinysrgb&w=1600">
+                            <h5><a href="#">Speakers</a></h5>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </section>
+        </div>
+    </section>
+<!--     Categories Section End-->
+
+    <!-- Featured Section Begin -->
+    <section class="featured spad">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <h2>Featured Product</h2>
+                    </div>
+                    <div class="featured__controls">
+                        <ul>
+                            <li class="active" data-filter="*">All</li>
+                            <li data-filter=".phones">Phones</li>
+                            <li data-filter=".Watches">Watches</li>
+                            <li data-filter=".Utensils">Utensils</li>
+                            <li data-filter=".Detergents">Detergents</li>
+                            <li data-filter=".Speakers">Speaker</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+
+            <div class="row container featured__filter">
+
+               {% for item in items: %}
+               <div class="col-lg-3 col-md-4 col-sm-6 mix vegetables {{item.category}}">
+                   <div class="featured__item">
+                       <div class="featured__item__pic set-bg" data-setbg="{{ item.image_url_1}}">
+                           <ul class="featured__item__pic__hover">
+                            {% if current_user.id == 1: %}
+                                <li><a href="{{url_for('edit', item_id=item.id)}}"><i class="fa fa-solid fa-pencil"></i></a></li>
+                                <li><a href="{{url_for('delete', item_id=item.id)}}"><i class="fa fa-solid fa-trash"></i></a></li>
+                            {%else:%}
+                               <li><a href="{{ url_for('add_to_cart', item_id=item.id) }}"><i class="fa fa-shopping-cart"></i></a></li>
+                               <li><a href="{{url_for('description', item_id=item.id)}}"><i class="fa fa-solid fa-info"></i></a></li>
+
+                            {%endif%}
+                           </ul>
+                       </div>
+                       <div class="featured__item__text">
+                           <h6><a href="#">{{item.name}}</a></h6>
+                           <h5>Ksh {{item.price}}</h5>
+                       </div>
+                   </div>
+              </div>
+              {% endfor %}
+            </div>
+        </div>
+    </section>
+    <!-- Featured Section End -->
+
+    <!-- Banner Begin -->
+    <div class="banner">
+        <div class="container">
+            <div class="row">
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="banner__pic">
+                        <img src="https://www.sitepoint.com/wp-content/uploads/2012/11/Final-result.jpg" alt="">
+                    </div>
+                </div>
+
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="banner__pic">
+                        <img src="https://www.sitepoint.com/wp-content/uploads/2012/11/Final-result.jpg" alt="">
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Banner End -->
+
+<!--    offers section carousel-->
+
+    <div class="container section-title">
+        <h2>Daily Offers</h2>
+    </div>
+
+    <div class="container daily-offers">
+        <div class="row">
+        <div class="product__discount__slider owl-carousel">
+
+
+            {% for offer in offers: %}
+            <div class="col-lg-4">
+                <div class="product__discount__item">
+                    <div class="product__discount__item__pic set-bg"
+                        data-setbg="{{offer.image_url}}">
+
+                        <div class="product__discount__percent">-{{discount}}%</div>
+                        <ul class="product__item__pic__hover">
+                        {% if current_user.id == 1: %}
+                            <li><a href="{{ url_for('edit_offer', offer_id=offer.id)}}"><i class="fa fa-solid fa-pencil"></i></a></li>
+                            <li><a href="{{ url_for('delete_offer', offer_id=offer.id)}}"><i class="fa fa-solid fa-trash"></i></a></li>
+                        {%else:%}
+                           <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
+                           <li><a href="#"><i class="fa fa-solid fa-info"></i></a></li>
+
+                        {%endif%}
+                        </ul>
+                    </div>
+                    <div class="product__discount__item__text">
+
+                        <h5><a href="#">{{ offer.name }}</a></h5>
+                        <div class="product__item__price">Ksh {{offer.price}} <span>Ksh {{offer.previous_price}}</span></div>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+
+
+        </div>
+    </div>
+    </div>
+
+  {% include "footer.html" %}
+
+    <!-- Js Plugins -->
+    <script src="static/js/jquery-3.3.1.min.js"></script>
+    <script src="static/js/bootstrap.min.js"></script>
+    <script src="static/js/jquery.nice-select.min.js"></script>
+    <script src="static/js/jquery-ui.min.js"></script>
+    <script src="static/js/jquery.slicknav.js"></script>
+    <script src="static/js/mixitup.min.js"></script>
+    <script src="static/js/owl.carousel.min.js"></script>
+    <script src="static/js/main.js"></script>
 
 
 
-        {% include "footer.html" %}
+</body>
 
-    </body>
 </html>
-
