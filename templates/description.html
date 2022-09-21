@@ -1,7 +1,6 @@
 {% include "header.html" %}
 
-
-   
+{% block content %}
         <!-- top container-->
 
         <div class="container">
@@ -19,7 +18,7 @@
                         </div>
                         <div class="carousel-inner">
                           <div class="carousel-item active">
-                            <img src="{{ item.image_url_2}}" class="img-thumbnail w a"alt="...">
+                            <img src="{{ item.image_url_}}" class="img-thumbnail w a"alt="...">
                           </div>
                           <div class="carousel-item">
                             <img src="{{ item.image_url_2 }}" class="img-thumbnail w a"alt="...">
@@ -44,9 +43,13 @@
                     {{item.description |safe}}
                 </div>
             </div>
-   
+            <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
         </section>
         {% include "footer.html" %}
 
-    </body>
-</html>
+   
+    {% endblock %}
+
+
+    

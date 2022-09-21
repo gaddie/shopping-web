@@ -1,3 +1,6 @@
+from crypt import methods
+from distutils.log import error
+from multiprocessing import connection
 from flask import Flask, render_template, request, url_for, redirect, flash, abort
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_sqlalchemy import SQLAlchemy
@@ -12,6 +15,9 @@ from flask_ckeditor import CKEditor, CKEditorField
 from functools import wraps
 from sqlalchemy.orm import relationship
 from flask_migrate import Migrate
+from email.message import EmailMessage
+import smtplib
+import ssl
 
 app = Flask(__name__)
 Bootstrap(app)
@@ -260,6 +266,8 @@ def add():
         return redirect(url_for("home"))
     return render_template("add.html", form=form)
 
+
+# adding offers to the database
 @app.route('/add_offer', methods=["GET", "POST"])
 @admin_only
 @login_required
@@ -297,7 +305,9 @@ def edit(item_id):
     if edit_form.validate_on_submit():
         item.name = edit_form.name.data
         item.price = edit_form.price.data
-        item.image_url = edit_form.img_url.data
+        item.image_url_1 = edit_form.img_url_1.data
+        item.image_url_2 = edit_form.img_url_2.data
+        item.image_url_3 = edit_form.img_url_3.data
         item.category = edit_form.category.data
         item.description = edit_form.description.data
         db.session.commit()
@@ -328,6 +338,7 @@ def edit_offer(offer_id):
         return redirect(url_for("home", item_id=offer_id))
     return render_template("edit.html", form=edit_form, is_edit=True, current_user=current_user)
 
+
 # ******** DESCRIPTION ********
 @app.route('/description/<int:item_id>')
 def description(item_id):
@@ -335,8 +346,48 @@ def description(item_id):
     return render_template("description.html", item=requested_item, current_user=current_user)
 
 
-# ********** CART *********
+# offers description
+@app.route('/offer_description/<int:offer_id>')
+def offer_description(offer_id):
+    requested_item = Offers.query.get(offer_id)
+    return render_template("description.html", item=requested_item, current_user=current_user)
 
+
+# ********** SENDING EMAIL TO TTHE CUSTOMER **********
+@app.route('/send_email', methods=["GET", "POST"])
+def send_email():     
+    customer_name = current_user.name
+    
+    # ordered_items = CartItems.query.filter_by(customer_id=current_user.get_id()).all()
+    # for item in ordered_items[0].item_name:
+    #     item_name = item
+
+    customer_email = current_user.email
+
+    # email configuration
+    email_sender = "dailydeals9396@gmail.com"
+    email_receiver = customer_email
+    email_password = "byxbqcsrmwkulknk"
+
+    subject = "Your order has been placed"
+    body = f"Thank you {customer_name} for shopping with us. Your order of will be delivered to you in 3-5 working days. Thank you for shopping with us."
+
+    em = EmailMessage()
+    em["Subject"] = subject
+    em["From"] = email_sender
+    em["To"] = email_receiver
+    em.set_content(body)
+
+    context = ssl.create_default_context()
+
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(email_sender, email_password)
+        server.sendmail(email_sender, email_receiver, em.as_string())
+
+    return redirect(url_for("home"))
+
+
+# ********** add to cart button route *********
 @app.route('/to_cart/<int:item_id>')
 def add_to_cart(item_id):
     selected_item = Items.query.get(item_id)
@@ -355,6 +406,26 @@ def add_to_cart(item_id):
     return redirect(url_for("home"))
 
 
+# ********* adding offers to the cart ***********
+@app.route('/add_offer_to_cart/<int:offer_id>')
+def add_offer_to_cart(offer_id):
+    selected_item = Offers.query.get(offer_id)
+    if not current_user.is_authenticated:
+        flash("You need to login or register in order to purchase any item.")
+        return redirect(url_for("login"))
+    else:
+        ordered_item = CartItems(
+            item_name=selected_item.name,
+            item_price=selected_item.price,
+            customer_name=current_user,
+        )
+    db.session.add(ordered_item)
+    db.session.commit()
+
+    return redirect(url_for("home"))
+
+
+# ********** CART *********
 @app.route('/cart')
 def cart():
     cart_items = CartItems.query.filter_by(customer_id=current_user.get_id()).all()
@@ -406,9 +477,12 @@ def delete(item_id):
 
     return redirect(url_for('home'))
 
+
+# contact us route
 @app.route('/contact')
 def contact():
     return render_template("contact.html", current_user=current_user)
+
 
 # ********** LOGOUT *********
 @app.route('/logout')
@@ -420,5 +494,4 @@ def logout():
 if __name__ == "__main__":
     app.run(debug=True, port=8000)
 
-# TO LIST
-# ADD RATING BY THE CUSTOMERS
+# byxbqcsrmwkulknk

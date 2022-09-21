@@ -33,6 +33,11 @@
                             <h5><a href="#">Speakers</a></h5>
                         </div>
                     </div>
+                    <div class="col-lg-3">
+                        <div class="categories__item set-bg" data-setbg="https://images.pexels.com/photos/704555/pexels-photo-704555.jpeg?auto=compress&cs=tinysrgb&w=1600">
+                            <h5><a href="#">Televisions</a></h5>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -54,7 +59,8 @@
                             <li data-filter=".Watches">Watches</li>
                             <li data-filter=".Utensils">Utensils</li>
                             <li data-filter=".Detergents">Detergents</li>
-                            <li data-filter=".Speakers">Speaker</li>
+                            <li data-filter=".Speakers">Speakers</li>
+                            <li data-filter=".Television">Tvs</li>
                         </ul>
                     </div>
                 </div>
@@ -73,7 +79,7 @@
                                 <li><a href="{{url_for('delete', item_id=item.id)}}"><i class="fa fa-solid fa-trash"></i></a></li>
                             {%else:%}
                                <li><a href="{{ url_for('add_to_cart', item_id=item.id) }}"><i class="fa fa-shopping-cart"></i></a></li>
-                               <li><a href="{{url_for('description', item_id=item.id)}}"><i class="fa fa-solid fa-info"></i></a></li>
+                               <li ><a href="{{url_for('description', item_id=item.id)}}"><i class="fa fa-solid fa-info"></i></a></li>
 
                             {%endif%}
                            </ul>
@@ -135,8 +141,8 @@
                             <li><a href="{{ url_for('edit_offer', offer_id=offer.id)}}"><i class="fa fa-solid fa-pencil"></i></a></li>
                             <li><a href="{{ url_for('delete_offer', offer_id=offer.id)}}"><i class="fa fa-solid fa-trash"></i></a></li>
                         {%else:%}
-                           <li><a href="#"><i class="fa fa-shopping-cart"></i></a></li>
-                           <li><a href="#"><i class="fa fa-solid fa-info"></i></a></li>
+                           <li><a href="{{ url_for('add_offer_to_cart', offer_id=offer.id)}}"><i class="fa fa-shopping-cart"></i></a></li>
+                           <li><a href="{{ url_for('offer_description', offer_id=offer.id)}}"><i class="fa fa-solid fa-info"></i></a></li>
 
                         {%endif%}
                         </ul>
@@ -154,6 +160,8 @@
         </div>
     </div>
     </div>
+
+
 
   {% include "footer.html" %}
 

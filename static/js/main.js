@@ -60,6 +60,8 @@
         allowParentLinks: true
     });
 
+    
+
     /*-----------------------
         Categories Slider
     ------------------------*/
@@ -222,3 +224,4 @@
     });
 
 })(jQuery);
+
